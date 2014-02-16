@@ -340,26 +340,26 @@ exports['an instance can define inheriting object'] = {
 
     var NewParent = self.NewParent;
 
-    var parentViewOps = {
+    var parentViewMappings = {
       firstOne: 'first.mapping',      
       toOverride: 'override.parent'
     };
-    NewParent.prototype.__defineInheritingObject__(key, parentViewOps);
+    NewParent.prototype.__defineInheritingObject__(key, parentViewMappings);
     
     var NewBase = self.NewBase;
 
-    var childViewOps = {
+    var childViewMappings = {
       newOne: 'another.mapping',
       toOverride: 'override.child'
     };
-    NewBase.prototype.__defineInheritingObject__(key, childViewOps);
+    NewBase.prototype.__defineInheritingObject__(key, childViewMappings);
     
     var instance = new NewBase();
     
-    test.notEqual(instance[key], parentViewOps);
-    test.same(instance[key].firstOne, parentViewOps.firstOne);
-    test.same(instance[key].newOne, childViewOps.newOne);
-    test.same(instance[key].toOverride, childViewOps.toOverride);
+    test.notEqual(instance[key], parentViewMappings);
+    test.same(instance[key].firstOne, parentViewMappings.firstOne);
+    test.same(instance[key].newOne, childViewMappings.newOne);
+    test.same(instance[key].toOverride, childViewMappings.toOverride);
     
     test.done();
   },
@@ -373,7 +373,7 @@ exports['an instance can define inheriting object'] = {
       done();      
     },
     
-    '__defineViewOps__': function(test) {
+    '__defineViewMappings__': function(test) {
       var self = this;
       
       var NewBase = self.NewBase;
@@ -381,7 +381,7 @@ exports['an instance can define inheriting object'] = {
       var viewMappings = {
         newOne: 'another.mapping'
       };
-      NewBase.prototype.__defineViewOps__(viewMappings);
+      NewBase.prototype.__defineViewMappings__(viewMappings);
       
       test.ok(self.mocks.__defineInheritingObject__.calledWith('_viewMappings', viewMappings));
       

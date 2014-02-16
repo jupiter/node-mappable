@@ -17,7 +17,7 @@ Wrapper.prototype.__defineViewTemplate__({
   name: true
 });
 
-Wrapper.prototype.__defineViewOps__({
+Wrapper.prototype.__defineViewMappings__({
   id: 'doc._id',
   type: 'doc.objectType',
   name: 'doc.name'
@@ -35,7 +35,7 @@ Asset.prototype.__defineViewTemplate__({
   dimensions: true
 });
 
-Asset.prototype.__defineViewOps__({
+Asset.prototype.__defineViewMappings__({
   sizeBytes: 'doc.sizeBytes',
   owner: function(self, cb) {
     Owner.findById(self.doc.ownerId, cb);
@@ -64,7 +64,7 @@ Video.prototype.__defineViewTemplate__({
   durationSeconds: true
 });
 
-Video.prototype.__defineViewOps__({
+Video.prototype.__defineViewMappings__({
   durationSeconds: function(){
     return Math.round(this.doc.videoInfo.durationMs / 1000);
   },
@@ -82,7 +82,7 @@ function Image(doc) {
 }
 util.inherits(Image, Asset);
 
-Image.prototype.__defineViewOps__({
+Image.prototype.__defineViewMappings__({
   dimensions: function() {
     return {
       x: this.doc.imageInfo.width,
@@ -97,7 +97,7 @@ function Owner(doc) {
 }
 util.inherits(Owner, Wrapper);
 
-Owner.prototype.__defineViewOps__({
+Owner.prototype.__defineViewMappings__({
   lastSeenAt: 'doc.lastSeenAt'
 });
 

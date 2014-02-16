@@ -82,7 +82,7 @@ a class that inherits from Base, or wrap instances using ViewContext.)
 ###  Define the mappings
 
 ```javascript
-MyClass.prototype.__defineViewOps__({
+MyClass.prototype.__defineViewMappings__({
   // Simple deep map by specifying the path
   'deepValue': 'doc.deeper.value',
   
