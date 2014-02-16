@@ -1,7 +1,7 @@
 to-view-object
 ===================
 
-Inherit from this base class to enable recursive conversion to a view-friendly object structure, mapped to standard templates with per-endpoint overrides.
+Inherit from this base class to enable recursive conversion to a view-friendly object structure, mapped to standard templates with optional overrides.
 
 ## Use case
 
@@ -20,8 +20,7 @@ Do this:
 
 ```javascript
 Asset.findAll(function(err, assets, summary){
-  ...
-  
+  //...//
   ViewContext.create({
     assets: assets,
     summary: summary
@@ -32,8 +31,7 @@ Asset.findAll(function(err, assets, summary){
     },
     summary: true
   }).toViewObject(function(err, viewObject){
-    ...
-    
+    //...//
     res.send(viewObject);
   });
 });
@@ -43,15 +41,13 @@ And re-use mapping and fetching logic elsewhere:
 
 ```javascript
 Asset.findById(req.params.id, function(err, asset){
-  ...
-  
+  //...//
   ViewContext.create({
     asset: asset
   }).template({
     asset: { owner: true }
   }).toViewObject(function(err, viewObject){
-    ...
-    
+    //...//
     res.send(viewObject);
   });
 });
@@ -63,7 +59,11 @@ See:
 - [examples/support/data.js](https://github.com/jupiter/node-to-view-object/tree/master/examples/support/data.js)
 - [examples/support/models.js](https://github.com/jupiter/node-to-view-object/tree/master/examples/support/models.js)
 
-## How
+## Installation
+
+`$ npm install to-view-object`
+
+## To use
 
 ### Inherit from Base
 
@@ -76,10 +76,10 @@ function MyClass(){
 util.inherits(MyClass, require('to-view-object').Base);
 ```
 
-If your class already inherits from something else, consider wrapping it within
-a class that inherits from Base, or wrap instances using ViewContext.
+(If your class already inherits from something else, consider wrapping it within
+a class that inherits from Base, or wrap instances using ViewContext.)
 
-###  Define the mappings and transforming operations
+###  Define the mappings
 
 ```javascript
 MyClass.prototype.__defineViewOps__({
@@ -107,7 +107,7 @@ MyClass.prototype.__defineViewOps__({
 });
 ```
 
-### Define the default values included in a view object
+### Define the default properties
 
 ```javascript
 MyClass.prototype.__defineViewTemplate__({
@@ -116,17 +116,46 @@ MyClass.prototype.__defineViewTemplate__({
 });
 ```
 
-### Convert your object to a view object
+### Convert a single instance to a view object
 
-```javascript
-myInstance.toViewObject(true, function(err, viewObject){})
-```
+**instance#toViewObject(template, callback)**
 
-Or, use a ViewContext to convert multiple objects:
+Arguments:
 
-```javascript
-require('to-view-object').ViewContext.create({
-  instances: myInstances
-}).toViewObject(function(err, viewObject){});
-```
+- **template** (optional) specifies which properties to include in addition to the default properties:
+  * `'*'` will include all properties available, recursively (not recommended for production)
+  * _Object_ to extend default properties, with values of either `true` or a sub-template _Object_, e.g. `{ updatedAt: true, owner: { updatedAt: true }}`
+- **callback** function taking arguments for error and the new view object, e.g. `function(err, viewObject){}`
 
+### Convert a custom object structure to a view object
+
+Use a ViewContext instance to recursively convert a custom object containing instances.
+
+`var ViewContext = require('to-view-object');`
+
+**ViewContext.create(obj)**
+
+Returns a new ViewContext instance.
+
+Arguments:
+
+- **obj** an _Object_ containing individual instances or arrays of instances
+
+**ViewContext#map(ops)**
+
+Returns the same ViewContext instance for chaining.
+
+**ViewContext#template(template)**
+
+Returns the same ViewContext instance for chaining.
+
+**ViewContext#toViewObject(template, callback)**
+
+See _instance#toViewObject_.
+
+**ViewContext#on(eventName, fn)**
+
+Events:
+
+- `'error'` e.g `function(err){}`
+- `'complete'` e.g. `function(viewObject){}`
