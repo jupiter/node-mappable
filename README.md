@@ -20,12 +20,12 @@ Do this:
 
 ```javascript
 Asset.findById(req.params.id, function(err, asset){
-  //...//
+  
   asset.toViewObject({
     // Selectively include non-default properties in output    
-    asset: { lastSeenAt: true }
+    asset: { owner: { lastSeenAt: true } }
   }, function(err, viewObject){
-  //...//
+  
     res.send(viewObject);
   });
 });
@@ -35,17 +35,15 @@ Or for collections of Assets:
 
 ```javascript
 Asset.findAll(function(err, assets, summary){
-  //...
+  
   ViewContext.create({
     assets: assets,
     summary: summary
   }).template({
-    assets: {
-      owner: { lastSeenAt: true }
-    },
+    assets: { owner: { lastSeenAt: true } },
     summary: true
   }).toViewObject(function(err, viewObject){
-    //...
+    
     res.send(viewObject);
   });
 });
@@ -65,7 +63,7 @@ $ npm install mappable
 
 ## How to use
 
-### Inherit from Base
+### Inherit from mappable Base
 
 For each of the classes in your object model, inherit from Base.
 
@@ -76,13 +74,13 @@ function MyClass(){
 util.inherits(MyClass, require('mappable').Base);
 ```
 
-(If your class already inherits from something else, consider wrapping it within
-a class that inherits from Base, or wrap instances using ViewContext.)
+(If your class already inherits from something else, wrap instances using 
+ViewContext or consider wrapping it within a class that inherits from Base.)
 
 ###  Define the mappings
 
 ```javascript
-MyClass.prototype.__defineViewOps__({
+MyClass.prototype.__defineViewMappings__({
   // Simple deep map by specifying the path
   'deepValue': 'doc.deeper.value',
   
@@ -116,9 +114,9 @@ MyClass.prototype.__defineViewTemplate__({
 });
 ```
 
-### Convert a single instance to a view object
+### Convert a single mappable instance to a view object
 
-**instance#toViewObject(template, callback)**
+**Mappable#toViewObject(template, callback)**
 
 Arguments:
 
