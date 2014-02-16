@@ -1,10 +1,10 @@
 {
-  "name": "to-view-object",
-  "version": "0.0.1",
+  "name": "mappable",
+  "version": "0.1.0",
   "description": "A base class for objects to be recursively mapped to a view-friendly object structure",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupiter/node-to-view-object.git"
+    "url": "https://github.com/jupiter/node-mappable.git"
   },
   "main": "./lib/index.js",
   "dependencies": {
