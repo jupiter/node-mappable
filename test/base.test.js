@@ -29,7 +29,7 @@ exports['an instance can be converted to a view object'] = {
       anotherDefaultTopItem: true      
     }
     
-    var viewOpsFunctions = {
+    var viewMappingsFunctions = {
       defaultTopItem: function(){
         return self.defaultTopItem;
       },
@@ -43,20 +43,20 @@ exports['an instance can be converted to a view object'] = {
       }
     }
     
-    NewBase.prototype._viewOps = {
+    NewBase.prototype._viewMappings = {
       defaultTopItem: function(){
         // Signature for synchronous
-        return viewOpsFunctions.defaultTopItem.apply(this, arguments);
+        return viewMappingsFunctions.defaultTopItem.apply(this, arguments);
       },
       
       anotherDefaultTopItem: function(self, done){
         // Signature for async with self
-        return viewOpsFunctions.anotherDefaultTopItem.apply(this, arguments);        
+        return viewMappingsFunctions.anotherDefaultTopItem.apply(this, arguments);        
       },
       
       nonDefaultTopItem: function(done){
         // Signature for async without self
-        return viewOpsFunctions.nonDefaultTopItem.apply(this, arguments);         
+        return viewMappingsFunctions.nonDefaultTopItem.apply(this, arguments);         
       }      
     }  
 
@@ -66,9 +66,9 @@ exports['an instance can be converted to a view object'] = {
     
     self.NewBase = NewBase;
     
-    self.mocks.defaultTopItem = sandbox.mock(viewOpsFunctions, 'defaultTopItem');
-    self.mocks.anotherDefaultTopItem = sandbox.mock(viewOpsFunctions, 'anotherDefaultTopItem');
-    self.mocks.nonDefaultTopItem = sandbox.mock(viewOpsFunctions, 'nonDefaultTopItem');
+    self.mocks.defaultTopItem = sandbox.mock(viewMappingsFunctions, 'defaultTopItem');
+    self.mocks.anotherDefaultTopItem = sandbox.mock(viewMappingsFunctions, 'anotherDefaultTopItem');
+    self.mocks.nonDefaultTopItem = sandbox.mock(viewMappingsFunctions, 'nonDefaultTopItem');
 
     self.mocks._mergedTemplate = sandbox.mock(NewBase.prototype, '_mergedTemplate');
     self.mocks._valueToViewObject = sandbox.mock(NewBase.prototype, '_valueToViewObject');
@@ -206,7 +206,7 @@ exports['an instance can be converted to a view object'] = {
       });
     },    
     
-    'includes all ops when passed a wildcard': {
+    'includes all mappings when passed a wildcard': {
       setUp: function(done){
         var self = this;
 
@@ -219,7 +219,7 @@ exports['an instance can be converted to a view object'] = {
           }
         };
 
-        var _viewOps = newInstance._viewOps = {
+        var _viewMappings = newInstance._viewMappings = {
           first: function(done){ done() },
           second: function(done){ done() },
           another: function(done){ done() }
@@ -286,7 +286,7 @@ exports['an instance can be converted to a view object'] = {
         forMapping: 'values'
       };
       
-      newInstance._viewOps = {
+      newInstance._viewMappings = {
         something: 'specialObj.forMapping'
       };
       
@@ -378,12 +378,12 @@ exports['an instance can define inheriting object'] = {
       
       var NewBase = self.NewBase;
 
-      var viewOps = {
+      var viewMappings = {
         newOne: 'another.mapping'
       };
-      NewBase.prototype.__defineViewOps__(viewOps);
+      NewBase.prototype.__defineViewOps__(viewMappings);
       
-      test.ok(self.mocks.__defineInheritingObject__.calledWith('_viewOps', viewOps));
+      test.ok(self.mocks.__defineInheritingObject__.calledWith('_viewMappings', viewMappings));
       
       test.done();
     },

@@ -1,7 +1,7 @@
-to-view-object
+mappable
 ===================
 
-Inherit from this base class to enable recursive conversion to a view-friendly object structure, mapped to standard templates with optional overrides.
+Inherit from this base class to enable recursive mapping to a view-friendly object structure.
 
 ## Use case
 
@@ -12,58 +12,58 @@ Inherit from this base class to enable recursive conversion to a view-friendly o
 
 ## Example
 
-To output a collection of Assets from this object model:
+To output Assets from this object model:
 
-![Models to view-friendly objects](https://rawgithub.com/jupiter/node-to-view-object/master/examples/support/models.svg)
+![Models to view-friendly objects](https://rawgithub.com/jupiter/node-mappable/master/examples/support/models.svg)
 
 Do this:
 
 ```javascript
-Asset.findAll(function(err, assets, summary){
+Asset.findById(req.params.id, function(err, asset){
   //...//
+  asset.toViewObject({
+    // Selectively include non-default properties in output    
+    asset: { lastSeenAt: true }
+  }, function(err, viewObject){
+  //...//
+    res.send(viewObject);
+  });
+});
+```
+
+Or for collections of Assets:
+
+```javascript
+Asset.findAll(function(err, assets, summary){
+  //...
   ViewContext.create({
     assets: assets,
     summary: summary
   }).template({
-    // Selectively include non-default properties in output
     assets: {
       owner: { lastSeenAt: true }
     },
     summary: true
   }).toViewObject(function(err, viewObject){
-    //...//
+    //...
     res.send(viewObject);
   });
 });
 ```
 
-And re-use mapping and fetching logic elsewhere:
+See examples:
 
-```javascript
-Asset.findById(req.params.id, function(err, asset){
-  //...//
-  ViewContext.create({
-    asset: asset
-  }).template({
-    asset: { owner: true }
-  }).toViewObject(function(err, viewObject){
-    //...//
-    res.send(viewObject);
-  });
-});
-```
-
-See:
-
-- [examples/assets.js](https://github.com/jupiter/node-to-view-object/tree/master/examples/assets.js)
-- [examples/support/data.js](https://github.com/jupiter/node-to-view-object/tree/master/examples/support/data.js)
-- [examples/support/models.js](https://github.com/jupiter/node-to-view-object/tree/master/examples/support/models.js)
+- [examples/assets.js](https://github.com/jupiter/node-mappable/tree/master/examples/assets.js)
+- [examples/support/data.js](https://github.com/jupiter/node-mappable/tree/master/examples/support/data.js)
+- [examples/support/models.js](https://github.com/jupiter/node-mappable/tree/master/examples/support/models.js)
 
 ## Installation
 
-`$ npm install to-view-object`
+```
+$ npm install mappable
+```
 
-## To use
+## How to use
 
 ### Inherit from Base
 
@@ -73,7 +73,7 @@ For each of the classes in your object model, inherit from Base.
 function MyClass(){
   MyClass.super_.apply(this);
 }
-util.inherits(MyClass, require('to-view-object').Base);
+util.inherits(MyClass, require('mappable').Base);
 ```
 
 (If your class already inherits from something else, consider wrapping it within
@@ -131,7 +131,7 @@ Arguments:
 
 Use a ViewContext instance to recursively convert a custom object containing instances.
 
-`var ViewContext = require('to-view-object');`
+`var ViewContext = require('mappable').ViewContext;`
 
 **ViewContext.create(obj)**
 
@@ -141,7 +141,7 @@ Arguments:
 
 - **obj** an _Object_ containing individual instances or arrays of instances
 
-**ViewContext#map(ops)**
+**ViewContext#map(mappings)**
 
 Returns the same ViewContext instance for chaining.
 

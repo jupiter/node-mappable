@@ -31,7 +31,7 @@ exports['simple integration test'] = {
       }
     };
 
-    self.ops = {
+    self.mappings = {
       name: 'simple.name',
       skipMe: 'simple.notInterestedIn',
       now: function(){
@@ -56,7 +56,7 @@ exports['simple integration test'] = {
 
       ViewContext
       .create(self.wrappedObj)
-      .map(self.ops)
+      .map(self.mappings)
       .template(self.template)
       .toViewObject(function(err, viewObject){
         if (err) return test.done(err);
@@ -77,7 +77,7 @@ exports['simple integration test'] = {
 
       ViewContext
       .create(self.wrappedObj)
-      .map(self.ops)
+      .map(self.mappings)
       .template(self.template)
       .toViewObject(function(err, viewObject){
         test.same(self.err, err);
@@ -92,7 +92,7 @@ exports['simple integration test'] = {
 
       ViewContext
       .create(self.wrappedObj)
-      .map(self.ops)
+      .map(self.mappings)
       .template(self.template)
       .on('error', function(err) {
         test.done(err);
@@ -114,7 +114,7 @@ exports['simple integration test'] = {
 
       ViewContext
       .create(self.wrappedObj)
-      .map(self.ops)
+      .map(self.mappings)
       .template(self.template)
       .on('error', function(err) {
         test.same(self.err, err);
