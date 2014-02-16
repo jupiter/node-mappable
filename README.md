@@ -18,7 +18,7 @@ To output a collection of Assets from this object model:
 
 Do this:
 
-```
+```javascript
 Asset.findAll(function(err, assets, summary){
   ...
   
@@ -41,7 +41,7 @@ Asset.findAll(function(err, assets, summary){
 
 And re-use mapping and fetching logic elsewhere:
 
-```
+```javascript
 Asset.findById(req.params.id, function(err, asset){
   ...
   
@@ -69,7 +69,7 @@ See:
 
 For each of the classes in your object model, inherit from Base.
 
-```
+```javascript
 function MyClass(){
   MyClass.super_.apply(this);
 }
@@ -81,7 +81,7 @@ a class that inherits from Base, or wrap instances using ViewContext.
 
 ###  Define the mappings and transforming operations
 
-```
+```javascript
 MyClass.prototype.__defineViewOps__({
   // Simple deep map by specifying the path
   'deepValue': 'doc.deeper.value',
@@ -109,7 +109,7 @@ MyClass.prototype.__defineViewOps__({
 
 ### Define the default values included in a view object
 
-```
+```javascript
 MyClass.prototype.__defineViewTemplate__({
   deepValue: true,
   syncValue: true
@@ -118,13 +118,13 @@ MyClass.prototype.__defineViewTemplate__({
 
 ### Convert your object to a view object
 
-```
+```javascript
 myInstance.toViewObject(true, function(err, viewObject){})
 ```
 
 Or, use a ViewContext to convert multiple objects:
 
-```
+```javascript
 require('to-view-object').ViewContext.create({
   instances: myInstances
 }).toViewObject(function(err, viewObject){});
