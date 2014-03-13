@@ -1,4 +1,4 @@
-mappable
+node-mappable ![Project status](https://secure.travis-ci.org/jupiter/node-mappable.png)
 ===================
 
 Inherit from this base class to enable recursive mapping to a view-friendly object structure.
