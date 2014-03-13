@@ -20,12 +20,12 @@ Do this:
 
 ```javascript
 Asset.findById(req.params.id, function(err, asset){
-  
+
   asset.toViewObject({
-    // Selectively include non-default properties in output    
+    // Selectively include non-default properties in output
     asset: { owner: { lastSeenAt: true } }
   }, function(err, viewObject){
-  
+
     res.send(viewObject);
   });
 });
@@ -35,7 +35,7 @@ Or for collections of Assets:
 
 ```javascript
 Asset.findAll(function(err, assets, summary){
-  
+
   ViewContext.create({
     assets: assets,
     summary: summary
@@ -43,7 +43,7 @@ Asset.findAll(function(err, assets, summary){
     assets: { owner: { lastSeenAt: true } },
     summary: true
   }).toViewObject(function(err, viewObject){
-    
+
     res.send(viewObject);
   });
 });
@@ -74,7 +74,7 @@ function MyClass(){
 util.inherits(MyClass, require('mappable').Base);
 ```
 
-(If your class already inherits from something else, wrap instances using 
+(If your class already inherits from something else, wrap instances using
 ViewContext or consider wrapping it within a class that inherits from Base.)
 
 ###  Define the mappings
@@ -83,17 +83,17 @@ ViewContext or consider wrapping it within a class that inherits from Base.)
 MyClass.prototype.__defineViewMappings__({
   // Simple deep map by specifying the path
   'deepValue': 'doc.deeper.value',
-  
+
   // Synchronously return a value
   'syncValue': function(){
     return new Date(doc.updatedAtMs);
   },
-  
+
   // Asynchronously return a value
   'asyncValue': function(done) {
     this.fetchValue(done);
   },
-  
+
   // Or with `self` already declared, for use with deeper callbacks
   'asyncValueSelf': function(self, done) {
     self.fetchValueAlt(function(err, valueAlt){
@@ -157,3 +157,17 @@ Events:
 
 - `'error'` e.g `function(err){}`
 - `'complete'` e.g. `function(viewObject){}`
+
+### Concurrency
+
+The default is to run mapping operations in _parallel_. To limit the number of concurrent mappings:
+
+```
+require('mappable').setConcurrencyLimit(5);
+```
+
+Or, for _series_:
+
+```
+require('mappable').setConcurrencyLimit(1);
+```
